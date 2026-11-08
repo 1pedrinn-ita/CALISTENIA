@@ -785,9 +785,62 @@
     var frame = function (src) { return '<div style="position:relative;width:100%;padding-top:177.78%"><iframe src="' + src + '" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>'; };
     if (yt) box.innerHTML = frame("https://www.youtube.com/embed/" + yt[1] + "?rel=0&playsinline=1");
     else if (vm) box.innerHTML = frame("https://player.vimeo.com/video/" + vm[1]);
-    else if (url) box.innerHTML = '<video src="' + esc(url) + '" controls playsinline preload="metadata" style="display:block;width:100%;height:auto;background:#000"></video>';
+    else if (url) vslPlayer(box, url);
     else box.innerHTML = '<div style="position:relative;width:100%;padding-top:177.78%;background:#1f1f1f"><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;text-align:center;padding:24px"><div style="width:64px;height:64px;border-radius:9999px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div><span style="font-size:14px;opacity:.8">Configure o vídeo em config.js</span></div></div>';
   }
+  /* Player estilo VSL: autoplay mudo + "clique para ouvir", sem barra de busca, barra de progresso falsa */
+  function vslPlayer(box, url) {
+    var RED = "#a00000", BAR = "#c40000";
+    box.innerHTML =
+      '<div data-vsl style="position:relative;width:100%;background:#000;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none">' +
+      '<video src="' + esc(url) + '" playsinline webkit-playsinline muted autoplay preload="auto" disablepictureinpicture controlslist="nodownload noplaybackrate" style="display:block;width:100%;height:auto;min-height:250px;background:#000"></video>' +
+      '<div data-vsl-unmute style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px">' +
+        '<div style="background:' + RED + 'e6;color:#fff;border-radius:12px;padding:18px 22px;text-align:center;max-width:260px;box-shadow:0 8px 24px rgba(0,0,0,.35);animation:pulse-shadow 2s ease-in-out infinite">' +
+          '<div style="font-weight:700;font-size:16px;line-height:1.25;margin-bottom:10px">Seu vídeo já começou</div>' +
+          '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 10px"><path d="M11 5 6 9H2v6h4l5 4V5z" fill="#fff"></path><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line></svg>' +
+          '<div style="font-weight:600;font-size:15px">Clique para ouvir</div>' +
+        "</div></div>" +
+      '<div data-vsl-play style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.35)">' +
+        '<div style="width:84px;height:84px;border-radius:9999px;background:' + RED + ';display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.4)"><svg width="38" height="38" viewBox="0 0 24 24" fill="#fff" style="margin-left:4px"><path d="M8 5v14l11-7z"></path></svg></div></div>' +
+      '<div style="position:absolute;left:0;right:0;bottom:0;height:10px;background:rgba(255,255,255,.2)"><div data-vsl-bar style="height:100%;width:0;background:' + BAR + ';transition:width .25s linear"></div></div>' +
+      "</div>";
+    var wrap = box.querySelector("[data-vsl]"), v = wrap.querySelector("video");
+    var unmute = wrap.querySelector("[data-vsl-unmute]"), playBtn = wrap.querySelector("[data-vsl-play]"), bar = wrap.querySelector("[data-vsl-bar]");
+    var started = false; // true depois que a pessoa ativou o som
+    v.muted = true;
+    function show(el, on) { el.style.display = on ? "flex" : "none"; }
+    function tryPlay() {
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { if (started) show(playBtn, true); });
+    }
+    tryPlay();
+    v.addEventListener("timeupdate", function () {
+      if (!v.duration) return;
+      var r = Math.min(v.currentTime / v.duration, 1);
+      bar.style.width = (Math.sqrt(r) * 100).toFixed(2) + "%"; // avança rápido no começo e devagar no fim
+    });
+    v.addEventListener("pause", function () { if (started) show(playBtn, true); });
+    v.addEventListener("play", function () { if (started) show(playBtn, false); });
+    // Fora da tela o navegador pode pausar o autoplay mudo: retoma quando o vídeo volta a aparecer.
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) {
+      if (!started && es[0].isIntersecting && v.paused) tryPlay();
+    }).observe(wrap);
+    document.addEventListener("visibilitychange", function () { if (!started && !document.hidden && v.paused && v.isConnected) tryPlay(); });
+    v.addEventListener("ended", function () { show(playBtn, true); });
+    wrap.addEventListener("click", function () {
+      if (!started) {
+        started = true;
+        show(unmute, false);
+        v.currentTime = 0;
+        v.muted = false;
+        tryPlay();
+        return;
+      }
+      if (v.paused || v.ended) tryPlay(); else v.pause();
+    });
+    v.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+  }
+
   function startOffer() {
     mountVideo();
     if (!state.ui.revealed) {

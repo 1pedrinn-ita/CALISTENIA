@@ -10,7 +10,7 @@ window.OFFER_CONFIG = {
   // 1) Player VTurb/ConverteAI: preencha accountId e playerId.
   vturb: { accountId: "", playerId: "" },
   // 2) Ou um link direto: YouTube, Vimeo ou arquivo .mp4.
-  videoUrl: "",
+  videoUrl: "assets/video/vsl.mp4",
 
   // Tempo (em segundos) até a oferta aparecer abaixo do vídeo. Original: 323 s.
   revealDelaySeconds: 323,
