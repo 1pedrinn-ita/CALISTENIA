@@ -4,7 +4,7 @@
  */
 window.OFFER_CONFIG = {
   // Link do seu checkout (os parâmetros UTM da visita são anexados automaticamente).
-  checkoutUrl: "",
+  checkoutUrl: "https://go.perfectpay.com.br/PPU38CQHK0R",
 
   // Vídeo da página final (escolha UMA opção):
   // 1) Player VTurb/ConverteAI: preencha accountId e playerId.
