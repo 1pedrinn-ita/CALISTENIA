@@ -81,9 +81,11 @@
   /* Componentes base                                                    */
   /* ------------------------------------------------------------------ */
   function header(showBack) {
-    return '<header class="relative flex items-center justify-center px-4 py-3 bg-card">' +
+    return '<header class="relative flex items-center justify-center px-4 py-3 bg-card hara-header">' +
       (showBack ? '<button data-action="back" class="absolute left-4 p-2 text-foreground hover:bg-muted rounded-lg transition-colors" aria-label="Voltar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg></button>' : "") +
-      '<div class="flex items-center gap-1.5"><span class="font-display text-primary tracking-wide text-3xl">CALISTENIA</span><span class="text-xs bg-muted px-2 py-0.5 rounded text-muted-foreground">by Atlas</span></div></header>';
+      '<div class="hara-logo" aria-label="Hara · Calistenia Asiática">' +
+      '<svg class="hara-enso" viewBox="0 0 32 32" aria-hidden="true"><path d="M26.6 11.2A11.4 11.4 0 1 1 19.7 5.1" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"></path><circle cx="16" cy="16" r="3" fill="currentColor"></circle></svg>' +
+      '<span class="hara-word">HARA</span><span class="hara-sub">Calistenia<br>Asiática</span></div></header>';
   }
   function progress(cur, total) {
     var w = Math.min(cur / total * 100, 100);
@@ -688,7 +690,7 @@
       return '<div class="space-y-3"><div><p class="text-xs text-primary font-medium mb-0.5">' + w[0] + '</p><p class="text-lg font-bold ' + wcls + '">' + w[1] + ' kg</p></div><div><p class="text-xs text-primary font-medium mb-0.5">Gordura corporal</p><p class="text-sm font-bold text-foreground">' + fat + '</p></div><div><p class="text-xs text-primary font-medium mb-0.5">Nível de treino de calistenia</p><p class="text-sm font-bold text-foreground mb-1.5">' + lvl + "</p>" + bars(n) + "</div></div>";
     };
     return '<div class="h-screen bg-background flex flex-col overflow-hidden">' + header(true) +
-      '<main class="flex-1 overflow-y-auto px-4 py-6 pb-24"><div class="max-w-md mx-auto"><h1 class="font-bold text-foreground mb-4 text-center md:text-2xl text-xl">Seu plano de Calistenia Asiática Atlas está <span class="text-primary">Quase</span> pronto!</h1>' +
+      '<main class="flex-1 overflow-y-auto px-4 py-6 pb-24"><div class="max-w-md mx-auto"><h1 class="font-bold text-foreground mb-4 text-center md:text-2xl text-xl">Seu plano Hara de Calistenia Asiática está <span class="text-primary">Quase</span> pronto!</h1>' +
       '<div class="bg-card rounded-xl p-4 mb-6 quiz-shadow"><div class="flex items-center justify-between mb-3"><div class="flex-1 text-center"><span class="text-sm text-muted-foreground font-medium">Agora</span></div><div class="w-16"></div><div class="flex-1 text-center"><span class="text-sm text-muted-foreground font-medium">Seu objetivo</span></div></div>' +
       '<div class="flex items-center justify-center gap-2"><div class="flex-1 flex justify-center"><img src="' + IMG + before + '" alt="Antes" class="w-[140px] h-[168px] md:w-48 md:h-56 object-cover object-top rounded-lg"></div>' +
       '<div class="flex items-center justify-center text-4xl text-muted-foreground font-bold"><span class="flex"><span class="animate-[fade-in_0.5s_ease-out_0s_infinite_alternate] opacity-40">›</span><span class="animate-[fade-in_0.5s_ease-out_0.15s_infinite_alternate] opacity-60">›</span><span class="animate-[fade-in_0.5s_ease-out_0.3s_infinite_alternate] opacity-100">›</span></span></div>' +
@@ -737,7 +739,7 @@
     return '<div class="animate-fade-in">' + ctaLink("mb-3") + spots("mb-6") +
       '<div class="bg-card rounded-xl p-5 mb-6 quiz-shadow"><h2 class="text-sm font-bold text-foreground mb-4 text-center">O que você vai receber</h2><div class="space-y-3">' +
       B.map(function (x) { return '<div class="flex items-start gap-2"><div class="w-5 h-5 rounded-md bg-quiz-green flex items-center justify-center flex-shrink-0 mt-0.5">' + icon("check", "w-3 h-3 text-white") + '</div><div class="text-sm"><span class="font-bold text-foreground">' + x[0] + ':</span> <span class="text-muted-foreground">' + x[1] + "</span></div></div>"; }).join("") +
-      '</div><div class="mt-6"><img src="' + IMG + 'app-mockup-B3X03Zx2.webp" alt="Aplicativo Calistenia Asiática Atlas" class="w-full rounded-2xl" loading="eager" decoding="async"></div></div>' +
+      '</div><div class="mt-6"><img src="' + IMG + 'app-mockup-B3X03Zx2.webp" alt="Aplicativo Hara de Calistenia Asiática" class="w-full rounded-2xl" loading="eager" decoding="async"></div></div>' +
       priceBox() + ctaLink("mb-6") +
       '<div class="mb-6"><h2 class="text-xl font-bold text-foreground mb-5 text-center">Resultados que nos deixam orgulhosos</h2><div class="space-y-4">' +
       T.map(function (t) { return '<div class="bg-card rounded-xl overflow-hidden quiz-shadow"><img src="' + IMG + t[0] + '" alt="Transformação de ' + t[1] + '" class="w-full object-contain" loading="lazy"><div class="p-4"><p class="font-bold text-primary mb-2">' + t[2] + '</p><p class="text-sm text-muted-foreground leading-relaxed">' + esc(t[3]) + "</p></div></div>"; }).join("") +
@@ -790,7 +792,7 @@
   }
   /* Player estilo VSL: autoplay mudo + "clique para ouvir", sem barra de busca, barra de progresso falsa */
   function vslPlayer(box, url) {
-    var RED = "#a00000", BAR = "#c40000";
+    var RED = "#A82D17", BAR = "#C8361C";
     box.innerHTML =
       '<div data-vsl style="position:relative;width:100%;background:#000;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none">' +
       '<video src="' + esc(url) + '" playsinline webkit-playsinline muted autoplay preload="auto" disablepictureinpicture controlslist="nodownload noplaybackrate" style="display:block;width:100%;height:auto;min-height:250px;background:#000"></video>' +
