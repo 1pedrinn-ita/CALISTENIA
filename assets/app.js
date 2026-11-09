@@ -775,6 +775,7 @@
       var el = document.createElement("vturb-smartplayer");
       el.id = "vid-" + vt.playerId;
       el.style.cssText = "display:block;margin:0 auto;width:100%;max-width:400px;";
+      el.innerHTML = '<div class="vturb-player-placeholder" style="position:relative;width:100%;padding:178.21782178217822% 0 0;z-index:0;background-color:black;"></div>';
       box.appendChild(el);
       var src = "https://scripts.converteai.net/" + vt.accountId + "/players/" + vt.playerId + "/v4/player.js";
       if (!document.querySelector('script[src="' + src + '"]')) {

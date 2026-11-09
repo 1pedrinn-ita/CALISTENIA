@@ -8,7 +8,7 @@ window.OFFER_CONFIG = {
 
   // Vídeo da página final (escolha UMA opção):
   // 1) Player VTurb/ConverteAI: preencha accountId e playerId.
-  vturb: { accountId: "", playerId: "" },
+  vturb: { accountId: "85b1882e-3999-422a-8e06-9a812220edbe", playerId: "6af1ffefef00c0c884aae84c" },
   // 2) Ou um link direto: YouTube, Vimeo ou arquivo .mp4.
   videoUrl: "assets/video/vsl.mp4",
 
